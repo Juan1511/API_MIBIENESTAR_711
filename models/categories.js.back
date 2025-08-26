@@ -1,0 +1,79 @@
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+  class categories extends Model {
+    static associate(models) {
+      // define association here
+      categories.hasMany(models.events, {
+        foreignKey: 'categoryId',
+        as: 'events'
+      });
+    }
+  }
+
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+  class categories extends Model {
+    static associate(models) {
+      // define association here
+      categories.hasMany(models.events, {
+        foreignKey: 'categoryId',
+        as: 'events'
+      });
+    }
+  }
+  
+  categories.init({
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    modelName: 'categories',
+  });
+  
+  return categories;
+};
+
+const updateCategorie = async (id, data) => {
+  try {
+    const categorie = await categories.findByPk(id);
+    if (!categorie) return null;
+
+    await categorie.update(data);
+    return categorie;
+  } catch (error) {
+    throw { status: 500, message: error.message };
+  }
+};
+
+const deleteCategorie = async (id) => {
+  try {
+    const categorie = await categories.findByPk(id);
+    if (!categorie) return null;
+    await categorie.destroy();
+    return categorie;
+  } catch (error) {
+    throw { status: 500, message: error.message };
+  }
+};
+
+module.exports = {
+  getAllCategories,
+  getCategorie,
+  createCategorie,
+  updateCategorie,
+  deleteCategorie
+}}
