@@ -2,37 +2,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const cors = require('cors');
-const { sequelize } = require('./models');
+const cors = require('cors'); // 👈 Importa cors
 
-// Establecer el entorno de producción
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
-// Cargar variables de entorno solo en desarrollo
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV != 'production') {
     require('dotenv').config();
 }
-
-// Función para probar la conexión a la base de datos
-async function testDatabaseConnection() {
-    try {
-        await sequelize.authenticate();
-        console.log('✅ Conexión a la base de datos establecida correctamente.');
-        
-        // Obtener información del dialecto y la URL de conexión
-        console.log('📊 Configuración de la base de datos:', {
-            dialect: sequelize.options.dialect,
-            host: sequelize.options.host,
-            database: sequelize.options.database,
-            port: sequelize.options.port
-        });
-    } catch (error) {
-        console.error('❌ Error al conectar con la base de datos:', error);
-    }
-}
-
-// Llamar a la función de prueba
-testDatabaseConnection();
 
 console.log('🌍 Entorno actual:', process.env.NODE_ENV);
 
