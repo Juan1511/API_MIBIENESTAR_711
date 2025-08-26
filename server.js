@@ -4,9 +4,15 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors'); // 👈 Importa cors
 
-if (process.env.NODE_ENV != 'production') {
+// Establecer el entorno de producción
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+
+// Cargar variables de entorno solo en desarrollo
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
+
+console.log('Current environment:', process.env.NODE_ENV);
 
 app.set('PORT', process.env.PORT || 4000);
 

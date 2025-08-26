@@ -9,11 +9,28 @@ const env = process.env.NODE_ENV || 'production';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+console.log('Database configuration:', {
+    environment: env,
+    host: config.host,
+    database: config.database,
+    dialect: config.dialect
+});
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    ...config,
+    logging: console.log, // Habilitar logging de consultas SQL
+    dialectOptions: {
+      ...config.dialectOptions,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  });
 }
 
 fs
