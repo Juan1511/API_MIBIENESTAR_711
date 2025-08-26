@@ -26,11 +26,28 @@ const getCategorie = async (req, res) => {
 // Crear una categoría
 const createCategorie = async (req, res) => {
   try {
+    console.log('📝 Intentando crear categoría con datos:', req.body);
+    
     const { name, description, image } = req.body;
-    const newCategorie = await categories.create({ name, description, image });
+    const newCategorie = await categories.create({ 
+      name, 
+      description, 
+      image 
+    });
+    
+    console.log('✅ Categoría creada exitosamente:', newCategorie.toJSON());
+    
+    // Verificar que la categoría se guardó consultándola nuevamente
+    const savedCategorie = await categories.findByPk(newCategorie.id);
+    console.log('🔍 Verificación de guardado:', savedCategorie ? '✅ Encontrada' : '❌ No encontrada');
+    
     res.status(201).json(newCategorie);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('❌ Error al crear categoría:', error);
+    res.status(500).json({ 
+      error: error.message,
+      detail: error.original ? error.original.detail : 'No additional details'
+    });
   }
 };
 
