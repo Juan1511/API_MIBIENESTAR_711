@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "",
-    "password": "",
-    "database": "",
-    "host": "",
+    "username": "juan_zuluaga",
+    "password": "RjG0KVigHyvIW7XxKQzoOfsPDAhd7Qt3",
+    "database": "mibienestar711_1xco",
+    "host": "dpg-d2n1e9adbo4c73924g3g-a.oregon-postgres.render.com/mibienestar711_1xco",
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {
