@@ -27,13 +27,34 @@ const getCategorie = async (req, res) => {
 const createCategorie = async (req, res) => {
   try {
     console.log('📝 Intentando crear categoría con datos:', req.body);
+    console.log('🔌 Estado de la conexión:', categories.sequelize.connectionManager.pool.test());
     
     const { name, description, image } = req.body;
-    const newCategorie = await categories.create({ 
-      name, 
-      description, 
-      image 
-    });
+    const transaction = await categories.sequelize.transaction();
+    
+    try {
+      const newCategorie = await categories.create({ 
+        name, 
+        description, 
+        image 
+      }, {
+        logging: console.log, // Esto mostrará la consulta SQL real
+        transaction // Usar la transacción explícitamente
+      });
+      
+      await transaction.commit();
+      console.log('💾 Transacción confirmada exitosamente');
+      
+      // Verificar que la categoría se guardó consultándola nuevamente
+      const savedCategorie = await categories.findByPk(newCategorie.id);
+      console.log('🔍 Verificación de guardado:', savedCategorie ? '✅ Encontrada' : '❌ No encontrada');
+      
+      res.status(201).json(newCategorie);
+    } catch (error) {
+      console.error('❌ Error durante la transacción:', error);
+      await transaction.rollback();
+      throw error; // Esto será capturado por el catch exterior
+    }
     
     console.log('✅ Categoría creada exitosamente:', newCategorie.toJSON());
     
