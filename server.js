@@ -13,9 +13,17 @@ console.log('🌍 Entorno actual:', process.env.NODE_ENV);
 app.set('PORT', process.env.PORT || 4000);
 
 // Middlewares
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json()); // Usar express.json() en lugar de bodyParser
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
+// Middleware para logging del body
+app.use((req, res, next) => {
+    if (req.method === 'POST') {
+        console.log('📦 Request Body:', req.body);
+    }
+    next();
+});
 
 // ✅ Middleware CORS (antes de las rutas)
 app.use(cors({

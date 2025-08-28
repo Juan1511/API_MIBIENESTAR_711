@@ -26,8 +26,16 @@ const getCategorie = async (req, res) => {
 // Crear una categoría
 const createCategorie = async (req, res) => {
   try {
-    console.log('📝 Intentando crear categoría con datos:', req.body);
-    console.log('🔌 Estado de la conexión:', categories.sequelize.connectionManager.pool.test());
+    console.log('📝 Request completo:', {
+      body: req.body,
+      headers: req.headers,
+      contentType: req.headers['content-type']
+    });
+
+    // Validar que req.body existe y tiene los campos necesarios
+    if (!req.body) {
+      return res.status(400).json({ error: 'No se recibió body en la petición' });
+    }
     
     const { name, description, image } = req.body;
     const transaction = await categories.sequelize.transaction();
